@@ -6,7 +6,7 @@ import s from './Timeline.module.css'
 
 type TimeStamp = number | Date
 
-const formatDate = (ts: TimeStamp) => {
+export const formatDate = (ts: TimeStamp) => {
   if (isToday(ts)) {
     return format(ts, 'HH:mm:ss')
   }

@@ -13,10 +13,14 @@ export class Api {
 
   public getQueues({
     status,
+    limit,
+    offset,
   }: {
     status: SelectedStatuses
+    limit?: number
+    offset?: number
   }): Promise<GetQueues> {
-    return this.axios.get(`/queues/`, { params: { ...status } })
+    return this.axios.get(`/queues/`, { params: { ...status, offset, limit } })
   }
 
   public retryAll(queueName: string): Promise<void> {

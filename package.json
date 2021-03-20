@@ -1,18 +1,20 @@
 {
-  "name": "bull-board",
-  "description": "Bull queue UI for inspecting jobs",
-  "version": "1.4.2",
+  "name": "phoenix-bull-board",
+  "description": "Bull queue UI for inspecting jobs -- customize by Phoenix",
+  "version": "0.0.1",
   "keywords": [
     "bull",
     "redis",
     "queue",
-    "monitoring"
+    "monitoring",
+    "phoenix-customize"
   ],
   "author": "Vitor Capretz <capretzvitor@gmail.com>",
   "contributors": [
     "Erik Engervall <erik.engervall@gmail.com>",
     "Felix Mosheev"
   ],
+  "folk": "Phoenix <ha.doanthanh.hust@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",

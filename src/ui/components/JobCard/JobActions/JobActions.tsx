@@ -30,7 +30,11 @@ const buttonTypes: Record<string, ButtonType> = {
 
 const statusToButtonsMap: Record<string, ButtonType[]> = {
   [STATUSES.failed]: [buttonTypes.retry, buttonTypes.clean],
-  [STATUSES.delayed]: [buttonTypes.promote, buttonTypes.clean],
+  // [STATUSES.delayed]: [buttonTypes.promote, buttonTypes.clean],
+  /**
+   * * Remove button clean on delayed jobs
+   */
+  [STATUSES.delayed]: [buttonTypes.promote],
   [STATUSES.completed]: [buttonTypes.clean],
   [STATUSES.waiting]: [buttonTypes.clean],
 }

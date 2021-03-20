@@ -4,6 +4,8 @@
   color: #718096;
   font-weight: 200;
   align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
 .stats > div {

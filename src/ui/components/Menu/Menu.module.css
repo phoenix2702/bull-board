@@ -5,12 +5,7 @@
   left: 0;
   bottom: 0;
   width: var(--menu-width);
-  background: linear-gradient(
-    to bottom,
-    hsl(217, 22%, 20%),
-    hsl(217, 22%, 16%) 80%,
-    hsl(217, 22%, 12%)
-  );
+  background: linear-gradient( to bottom, hsl(217, 22%, 20%), hsl(217, 22%, 16%) 80%, hsl(217, 22%, 12%));
   padding-top: 1rem;
   color: #d5d9dc;
   display: flex;
@@ -18,7 +13,7 @@
   box-shadow: 4px 0 8px 3px rgba(38, 46, 60, 0.1);
 }
 
-.aside > div {
+.aside>div {
   color: #828e97;
   font-size: 0.833em;
   padding: 0 1rem;
@@ -34,7 +29,7 @@
   padding: 0;
 }
 
-.menu li + li {
+.menu li+li {
   border-top: 1px solid hsl(206, 9%, 25%);
 }
 
@@ -62,4 +57,26 @@
 
 .appVersion {
   text-align: center;
+}
+
+.input {
+  color: inherit;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  overflow: hidden;
+  transition: background-color 0.1s ease-in 0s;
+  border: 0 none;
+  border-left: 3px solid transparent;
+  border-bottom: 2px solid #fff;
+  background: transparent;
+  width: 100%;
+  font-size: 16px;
+  outline: none,
+}
+
+.input::placeholder {
+  color: #d5d9dc;
 }

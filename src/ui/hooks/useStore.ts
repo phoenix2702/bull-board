@@ -17,7 +17,7 @@ export interface Store {
   selectedStatuses: SelectedStatuses
 }
 
-export const useStore = (api: Api): Store => {
+export const useStore = (api: Api, limit = 20, offset = 0): Store => {
   const [state, setState] = useState({
     data: null,
     loading: true,
@@ -52,18 +52,20 @@ export const useStore = (api: Api): Store => {
   }
 
   const update = () =>
-    api.getQueues({ status: selectedStatuses }).then((data: api.GetQueues) => {
-      setState({ data, loading: false })
+    api
+      .getQueues({ status: selectedStatuses, limit, offset })
+      .then((data: api.GetQueues) => {
+        setState({ data, loading: false })
 
-      if (state.loading) {
-        setSelectedStatuses(
-          data.queues.reduce((result, queue) => {
-            result[queue.name] = result[queue.name] || STATUS_LIST[0]
-            return result
-          }, {} as Record<string, Status>),
-        )
-      }
-    })
+        if (state.loading) {
+          setSelectedStatuses(
+            data.queues.reduce((result, queue) => {
+              result[queue.name] = result[queue.name] || STATUS_LIST[0]
+              return result
+            }, {} as Record<string, Status>),
+          )
+        }
+      })
 
   const promoteJob = (queueName: string) => (job: AppJob) => () =>
     api.promoteJob(queueName, job.id).then(update)

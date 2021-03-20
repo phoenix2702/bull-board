@@ -1,0 +1,96 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.justifyContentCenter {
+  justify-content: center;
+  display: flex;
+}
+
+.pagination ul {
+  list-style: none;
+}
+
+.pageItem {
+  padding: 5px 10px;
+  border: 1px solid #454b52;
+  cursor: pointer;
+  outline: none;
+  background: transparent;
+}
+
+.showConsiseTable {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.showConsiseTable select {
+  width: 75px;
+  height: 30px;
+  padding: 5px;
+  line-height: 1;
+}
+
+.showConsiseTable span {
+  margin: 0 10px;
+}
+
+.pageItem {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin: 0 4px;
+}
+
+.pageItem .pageLink {
+  padding: 0;
+  color: #5d5d5d;
+  border: 0;
+  background-color: transparent;
+  height: 20px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.pageItem .pageLink i {
+  width: 20px;
+  height: 20px;
+}
+
+.pageItem.active .pageLink i {
+  filter: invert(87%) sepia(86%) saturate(17%) hue-rotate(244deg) brightness(107%) contrast(104%);
+}
+
+.pageItem:hover,
+.pageItem.active {
+  background-color: #c2dcff;
+}
+
+.pageItem.active .pageLink,
+.pageItem:hover .pageLink {
+  color: #0038dd;
+}
+
+.pageItem:hover .pageLink i {
+  filter: invert(57%) sepia(53%) saturate(4951%) hue-rotate(200deg) brightness(107%) contrast(101%);
+}
+
+.customSelect {
+  width: auto;
+  border: 1px solid #454b52;
+  background: transparent;
+  font-family: inherit;
+  outline: none;
+  color: #454b52;
+  border-radius: 4px;
+}
