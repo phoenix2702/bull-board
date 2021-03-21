@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as api from '../../@types/api'
 import { AppJob, QueueActions, SelectedStatuses } from '../../@types/app'
+import { IHandleRefetch } from '../components/App'
 import { Status, STATUS_LIST } from '../components/constants'
 import { Api } from '../services/Api'
 
@@ -17,7 +18,7 @@ export interface Store {
   selectedStatuses: SelectedStatuses
 }
 
-export const useStore = (api: Api, limit = 20, offset = 0): Store => {
+export const useStore = (api: Api): Store => {
   const [state, setState] = useState({
     data: null,
     loading: true,
@@ -25,6 +26,11 @@ export const useStore = (api: Api, limit = 20, offset = 0): Store => {
   const [selectedStatuses, setSelectedStatuses] = useState(
     {} as SelectedStatuses,
   )
+  const [refetch, setRefetch] = useState<IHandleRefetch>({
+    limit: 10,
+    offset: 0,
+    search: '',
+  })
 
   const poll = useRef(undefined as undefined | NodeJS.Timeout)
   const stopPolling = () => {
@@ -39,7 +45,7 @@ export const useStore = (api: Api, limit = 20, offset = 0): Store => {
     runPolling()
 
     return stopPolling
-  }, [selectedStatuses])
+  }, [selectedStatuses, refetch])
 
   const runPolling = () => {
     update()
@@ -53,7 +59,11 @@ export const useStore = (api: Api, limit = 20, offset = 0): Store => {
 
   const update = () =>
     api
-      .getQueues({ status: selectedStatuses, limit, offset })
+      .getQueues({
+        status: selectedStatuses,
+        limit: refetch.limit,
+        offset: refetch.offset,
+      })
       .then((data: api.GetQueues) => {
         setState({ data, loading: false })
 
@@ -99,6 +109,7 @@ export const useStore = (api: Api, limit = 20, offset = 0): Store => {
       cleanAllFailed,
       cleanAllCompleted,
       setSelectedStatuses,
+      setRefetch,
     },
     selectedStatuses,
   }

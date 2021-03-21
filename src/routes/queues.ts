@@ -74,8 +74,8 @@ const getDataForQueues = async (
 ): Promise<api.GetQueues> => {
   const query = req.query || {}
   const pairs = Object.entries(bullBoardQueues)
-  const limit: number = Number(req.params.limit) || 100
-  const offset: number = Number(req.params.offset) || 0
+  const limit: number = Number(req.query.limit) || 10
+  const offset: number = Number(req.query.offset) || 0
 
   if (pairs.length == 0) {
     return {
@@ -89,8 +89,7 @@ const getDataForQueues = async (
       const counts = await queue.getJobCounts(...statuses)
       const status =
         query[name] === 'latest' ? statuses : (query[name] as JobStatus[])
-      const jobs = await queue.getJobs(status, offset, limit)
-
+      const jobs = await queue.getJobs(status, offset, limit + offset)
       return {
         name,
         counts: counts as Record<Status, number>,

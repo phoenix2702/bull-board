@@ -3,6 +3,7 @@ import { Job as JobMq, JobsOptions } from 'bullmq'
 import * as Redis from 'ioredis'
 import React from 'react'
 import { Status } from '../ui/components/constants'
+import { IHandleRefetch } from '../ui/components/App'
 
 export type JobCleanStatus =
   | 'completed'
@@ -97,4 +98,5 @@ export interface QueueActions {
   cleanAllFailed: (queueName: string) => () => Promise<void>
   cleanAllCompleted: (queueName: string) => () => Promise<void>
   setSelectedStatuses: React.Dispatch<React.SetStateAction<SelectedStatuses>>
+  setRefetch: React.Dispatch<React.SetStateAction<IHandleRefetch>>
 }

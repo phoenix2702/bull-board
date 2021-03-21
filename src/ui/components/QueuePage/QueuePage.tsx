@@ -5,8 +5,8 @@ import { JobCard } from '../JobCard/JobCard'
 import { QueueActions } from '../QueueActions/QueueActions'
 import { StatusMenu } from '../StatusMenu/StatusMenu'
 import s from './QueuePage.module.css'
-import { formatDate } from '../JobCard/Timeline/Timeline'
 import { Pagination } from '../Pagination/Pagination'
+
 let timeOut: any = 0
 
 const styles = {
@@ -18,13 +18,6 @@ const styles = {
     marginBottom: 20,
     textAlign: 'right',
   } as any,
-}
-
-interface IUseChangeQueue {
-  currentPage?: number
-  limit?: number
-  newQueues?: AppQueue
-  searchValue?: string
 }
 
 export const QueuePage = ({
@@ -40,53 +33,55 @@ export const QueuePage = ({
     return <section>Queue Not found</section>
   }
   const [search, setSearch] = useState<string>('')
-  const [currentQueue, setCurrentQueue] = useState<AppQueue>({ ...queue })
-  const [count, setCount] = useState<number>(currentQueue.jobs.length || 0)
+  const [count, setCount] = useState<number>(0)
   const [limit, setLimit] = useState<number>(10)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [page, setPage] = useState<number>(Math.floor(count / limit))
+  const [page, setPage] = useState<number>(1)
 
-  const useChangeQueue = ({
-    currentPage = 1,
-    limit = 0,
-    newQueues = { ...queue },
-    searchValue = '',
-  }: IUseChangeQueue) => {
-    if (searchValue) {
-      newQueues.jobs = newQueues.jobs.filter((job) => {
-        const { name, timestamp, processedOn, finishedOn, id } = job
-        if (
-          (name && name.toLowerCase().includes(searchValue)) ||
-          (timestamp && formatDate(timestamp).includes(searchValue)) ||
-          (processedOn && formatDate(processedOn).includes(searchValue)) ||
-          (finishedOn && formatDate(finishedOn).includes(searchValue)) ||
-          (id && id.toString().toLowerCase().includes(searchValue))
-        ) {
-          return job
-        }
-      })
-    }
+  // const useChangeQueue = ({
+  //   currentPage = 1,
+  //   limit = 0,
+  //   newQueues = { ...queue },
+  //   searchValue = '',
+  // }: IUseChangeQueue) => {
+  //   if (searchValue) {
+  //     newQueues.jobs = newQueues.jobs.filter((job) => {
+  //       const { name, timestamp, processedOn, finishedOn, id } = job
+  //       if (
+  //         (name && name.toLowerCase().includes(searchValue)) ||
+  //         (timestamp && formatDate(timestamp).includes(searchValue)) ||
+  //         (processedOn && formatDate(processedOn).includes(searchValue)) ||
+  //         (finishedOn && formatDate(finishedOn).includes(searchValue)) ||
+  //         (id && id.toString().toLowerCase().includes(searchValue))
+  //       ) {
+  //         return job
+  //       }
+  //     })
+  //   }
 
-    const sliceFrom = (currentPage - 1) * limit
+  //   const sliceFrom = (currentPage - 1) * limit
 
-    if (limit) {
-      const sliceTo = sliceFrom + limit
-      newQueues.jobs = newQueues.jobs.slice(sliceFrom, sliceTo)
-    } else {
-      newQueues.jobs = newQueues.jobs.slice(sliceFrom)
-    }
+  //   if (limit) {
+  //     const sliceTo = sliceFrom + limit
+  //     newQueues.jobs = newQueues.jobs.slice(sliceFrom, sliceTo)
+  //   } else {
+  //     newQueues.jobs = newQueues.jobs.slice(sliceFrom)
+  //   }
 
-    setCount(newQueues.jobs.length || 0)
+  //   setCount(newQueues.jobs.length || 0)
 
-    return setCurrentQueue(newQueues)
-  }
+  //   return setCurrentQueue(newQueues)
+  // }
 
   useEffect(() => {
-    useChangeQueue({ currentPage, limit, searchValue: search })
-    setCount(queue.jobs.length || 0)
+    const newCount: number | undefined =
+      queue.counts[selectedStatus[queue.name]]
+    setCount(newCount || queue.jobs.length || 0)
+    const newPage: number = Math.floor(newCount / limit) || 0
+    setPage(newPage)
   }, [queue])
 
-  const handleChangeInput = (e: any) => {
+  const handleChangeSearch = (e: any) => {
     const { value } = e.target
     if (value === search) {
       return
@@ -98,13 +93,13 @@ export const QueuePage = ({
       setSearch(searchValue)
       timeOut = setTimeout(() => {
         setCurrentPage(1)
-        useChangeQueue({ limit: 0, currentPage: 1, searchValue })
+        actions.setRefetch({ limit, offset: 0 })
+        // handleRefetch({ limit, offset: 0, search: searchValue })
       }, 300)
     } else {
       setSearch('')
-      timeOut = setTimeout(() => {
-        useChangeQueue({ limit, currentPage })
-      }, 300)
+      actions.setRefetch({ limit, offset: 0 })
+      // handleRefetch({ limit, offset: 0 })
     }
   }
 
@@ -112,12 +107,14 @@ export const QueuePage = ({
     const newPage = Math.ceil(count / value)
     setLimit(value)
     setPage(newPage)
-    useChangeQueue({ currentPage, limit: value })
+    actions.setRefetch({ limit: value, offset: (currentPage - 1) * limit })
+    // handleRefetch({ limit: value, offset: (currentPage - 1) * limit, search })
   }
 
   const handleChangePage = (value: number) => {
     setCurrentPage(value)
-    useChangeQueue({ currentPage: value, limit })
+    actions.setRefetch({ limit, offset: (value - 1) * limit })
+    // handleRefetch({ limit, offset: (value - 1) * limit, search })
   }
 
   return (
@@ -142,21 +139,21 @@ export const QueuePage = ({
           name="search"
           value={search}
           placeholder="Search"
-          onChange={handleChangeInput}
+          onChange={handleChangeSearch}
         />
       </div>
-      {currentQueue.jobs.map((job) => {
+      {queue.jobs.map((job) => {
         return (
           <JobCard
             key={job.id}
             job={job}
-            status={selectedStatus[currentQueue.name]}
+            status={selectedStatus[queue.name]}
             actions={{
-              cleanJob: actions.cleanJob(currentQueue?.name)(job),
-              promoteJob: actions.promoteJob(currentQueue?.name)(job),
-              retryJob: actions.retryJob(currentQueue?.name)(job),
+              cleanJob: actions.cleanJob(queue?.name)(job),
+              promoteJob: actions.promoteJob(queue?.name)(job),
+              retryJob: actions.retryJob(queue?.name)(job),
             }}
-            readOnlyMode={currentQueue?.readOnlyMode}
+            readOnlyMode={queue?.readOnlyMode}
           />
         )
       })}

@@ -8,6 +8,12 @@ import { Menu } from './Menu/Menu'
 import { QueuePage } from './QueuePage/QueuePage'
 import { RedisStats } from './RedisStats/RedisStats'
 
+export interface IHandleRefetch {
+  limit: number
+  offset: number
+  search?: string
+}
+
 export const App = ({ basePath, api }: { basePath: string; api: Api }) => {
   const { state, actions, selectedStatuses } = useStore(api)
 
@@ -50,7 +56,7 @@ export const App = ({ basePath, api }: { basePath: string; api: Api }) => {
           )}
         </div>
       </main>
-      <Menu queues={state.data?.queues.map((q) => q.name)} />
+      <Menu queues={state.data?.queues.map((q) => q.name) || []} />
       <ToastContainer />
     </BrowserRouter>
   )

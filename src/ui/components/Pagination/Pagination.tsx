@@ -13,19 +13,18 @@ interface IProps {
 const listPaginationLimitOption: number[] = [10, 20, 50, 100]
 
 export const Pagination = (props: IProps) => {
-  const {
-    limit: propsLimit,
-    page: propsPage,
-    currentPage: propsCurrentPage,
-    count: propsCount,
-  } = props
-
   const [limit, setLimit] = useState<number>(20)
   const [page, setPage] = useState<number>(1)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [count, setCount] = useState<number>(0)
 
   useEffect(() => {
+    const {
+      limit: propsLimit,
+      page: propsPage,
+      currentPage: propsCurrentPage,
+      count: propsCount,
+    } = props
     setLimit(propsLimit)
     setPage(propsPage)
     setCurrentPage(propsCurrentPage)
